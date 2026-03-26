@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import re
+import signal
 
 # =============================================================================
 # 1. LATEX FORMATTER & NUCLIDE DATABASE
@@ -87,14 +88,11 @@ ejectile   = col1.text_input("Ejectile", value="n")
 recoil     = col2.text_input("Recoil", value="16O")
 
 # --- NEW: Synchronized Incident Energy Input ---
-
-# 1. Initialize session state for energy if not already there
 if 'energy_num' not in st.session_state:
     st.session_state.energy_num = 5.0
 if 'energy_slide' not in st.session_state:
     st.session_state.energy_slide = 5.0
 
-# 2. Callbacks to keep them in sync
 def update_energy_slider():
     st.session_state.energy_slide = st.session_state.energy_num
 
@@ -102,19 +100,14 @@ def update_energy_num():
     st.session_state.energy_num = st.session_state.energy_slide
 
 st.sidebar.markdown("**Incident Energy (MeV)**")
-
-# 3. The Number Input
 st.sidebar.number_input("Type Energy:", min_value=0.1, max_value=100.0, step=0.1, 
                         key='energy_num', on_change=update_energy_slider, label_visibility="collapsed")
-
-# 4. The Slider
 st.sidebar.slider("Slide Energy:", min_value=0.1, max_value=100.0, step=0.1, 
                   key='energy_slide', on_change=update_energy_num, label_visibility="collapsed")
 
-# 5. Link it back to the main variable name used in your math
 incident_energy_MeV = st.session_state.energy_num
 
-# --- Flawlessly Synchronized Angle Input ---
+# --- NEW: Synchronized Angle Input ---
 if 'angle_num' not in st.session_state:
     st.session_state.angle_num = 45.0
 if 'angle_slide' not in st.session_state:
@@ -133,6 +126,13 @@ st.sidebar.slider("Slide Angle:", min_value=0.0, max_value=180.0, step=0.1,
                   key='angle_slide', on_change=update_num, label_visibility="collapsed")
 
 detector_angle_deg = st.session_state.angle_num
+
+# --- NEW: SHUTDOWN BUTTON ---
+st.sidebar.markdown("---")
+if st.sidebar.button("🛑 Shutdown App", use_container_width=True):
+    st.sidebar.warning("Process killed. You can now close this tab.")
+    # This sends a 'stop' signal to the specific Python process running this app
+    os.kill(os.getpid(), signal.SIGINT)
 
 st.sidebar.markdown("---")
 angle_step_deg = st.sidebar.selectbox("CSV Angle Resolution", [1.0, 0.5, 0.1, 0.05], index=2)
