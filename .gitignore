@@ -1,0 +1,12 @@
+# Mac system files
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Streamlit cache
+.streamlit/
+
+# Data output folders
+Kinematic Curve Output/
