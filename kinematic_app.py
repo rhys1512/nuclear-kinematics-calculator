@@ -78,7 +78,7 @@ def solve_kinematics(m_p, m_t, m_out, m_other, Ep, Q, angles_deg):
 # 2. UI LAYOUT & SIDEBAR INPUTS
 # =============================================================================
 st.set_page_config(page_title="Kinematics Calculator", layout="wide")
-st.title("⚛️ Nuclear Kinematics Calculator")
+st.title("☢️ Nuclear Kinematics Calculator")
 
 st.sidebar.header("Reaction Parameters")
 col1, col2 = st.sidebar.columns(2)
@@ -233,7 +233,7 @@ if val_ejectile is not None:
 if val_recoil is not None:
     ax.scatter([detector_angle_deg], [val_recoil], color='red', zorder=5, s=80)
 
-ax.set_title(f"Kinematic Drop-off over Angle", fontweight='bold')
+ax.set_title(f"Kinematic Curves", fontweight='bold')
 ax.set_xlabel("Laboratory Observation Angle [Degrees]")
 ax.set_ylabel("Particle Energy [MeV]")
 ax.set_xlim(0, 180)
