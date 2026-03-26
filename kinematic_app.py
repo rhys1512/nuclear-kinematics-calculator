@@ -86,7 +86,33 @@ target     = col2.text_input("Target", value="13C")
 ejectile   = col1.text_input("Ejectile", value="n")
 recoil     = col2.text_input("Recoil", value="16O")
 
-incident_energy_MeV = st.sidebar.number_input("Incident Energy (MeV)", min_value=0.1, value=5.0, step=0.1)
+# --- NEW: Synchronized Incident Energy Input ---
+
+# 1. Initialize session state for energy if not already there
+if 'energy_num' not in st.session_state:
+    st.session_state.energy_num = 5.0
+if 'energy_slide' not in st.session_state:
+    st.session_state.energy_slide = 5.0
+
+# 2. Callbacks to keep them in sync
+def update_energy_slider():
+    st.session_state.energy_slide = st.session_state.energy_num
+
+def update_energy_num():
+    st.session_state.energy_num = st.session_state.energy_slide
+
+st.sidebar.markdown("**Incident Energy (MeV)**")
+
+# 3. The Number Input
+st.sidebar.number_input("Type Energy:", min_value=0.1, max_value=100.0, step=0.1, 
+                        key='energy_num', on_change=update_energy_slider, label_visibility="collapsed")
+
+# 4. The Slider
+st.sidebar.slider("Slide Energy:", min_value=0.1, max_value=100.0, step=0.1, 
+                  key='energy_slide', on_change=update_energy_num, label_visibility="collapsed")
+
+# 5. Link it back to the main variable name used in your math
+incident_energy_MeV = st.session_state.energy_num
 
 # --- Flawlessly Synchronized Angle Input ---
 if 'angle_num' not in st.session_state:
