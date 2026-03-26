@@ -1,4 +1,4 @@
-# ⚛️ Nuclear Kinematics Calculator
+# ☢️ Nuclear Kinematics Calculator
 
 A streamlined, interactive web application built with Python and Streamlit for calculating two-body non-relativistic nuclear kinematics. Designed for experimental nuclear physicists, this tool provides real-time kinematic drop-off curves, specific angle interrogation, and raw data export.
 
