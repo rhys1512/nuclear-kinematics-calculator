@@ -127,11 +127,32 @@ st.sidebar.slider("Slide Angle:", min_value=0.0, max_value=180.0, step=0.1,
 
 detector_angle_deg = st.session_state.angle_num
 
-# --- NEW: SHUTDOWN BUTTON ---
+
+# --- "Best Effort" Auto-Close Shutdown ---
 st.sidebar.markdown("---")
 if st.sidebar.button("🛑 Shutdown App", use_container_width=True):
-    st.sidebar.warning("Process killed. You can now close this tab.")
-    # This sends a 'stop' signal to the specific Python process running this app
+    # 1. Display a goodbye message in the UI
+    st.balloons()
+    st.sidebar.success("Physics session ended safely.")
+    
+    # 2. Inject JavaScript to try and close the tab
+    # Note: This works best if the tab was opened via a script. 
+    # Otherwise, it provides a 'dead' screen.
+    st.components.v1.html(
+        """
+        <script>
+            window.parent.document.body.innerHTML = "<h1>Session Ended</h1><p>The Python process has been killed. You can now close this window.</p>";
+            window.parent.close();
+        </script>
+        """,
+        height=0
+    )
+    
+    # 3. Short delay to let the browser receive the message before the server dies
+    import time
+    time.sleep(1)
+    
+    # 4. Kill the process
     os.kill(os.getpid(), signal.SIGINT)
 
 st.sidebar.markdown("---")
