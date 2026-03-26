@@ -128,32 +128,35 @@ st.sidebar.slider("Slide Angle:", min_value=0.0, max_value=180.0, step=0.1,
 detector_angle_deg = st.session_state.angle_num
 
 
-# --- "Best Effort" Auto-Close Shutdown ---
+# --- UPDATED: Total Process Tree Shutdown ---
 st.sidebar.markdown("---")
 if st.sidebar.button("🛑 Shutdown App", use_container_width=True):
-    # 1. Display a goodbye message in the UI
-    st.balloons()
-    st.sidebar.success("Physics session ended safely.")
-    
-    # 2. Inject JavaScript to try and close the tab
-    # Note: This works best if the tab was opened via a script. 
-    # Otherwise, it provides a 'dead' screen.
+    # 1. UI Feedback for the user
     st.components.v1.html(
         """
         <script>
-            window.parent.document.body.innerHTML = "<h1>Session Ended</h1><p>The Python process has been killed. You can now close this window.</p>";
-            window.parent.close();
+            window.parent.document.body.innerHTML = 
+            "<div style='font-family:sans-serif; text-align:center; margin-top:50px;'>"
+            + "<h1>⚛️ Session Terminated</h1>"
+            + "<p>The Python engine and shell script have been killed.</p>"
+            + "<p>You can now safely close this tab.</p></div>";
         </script>
         """,
         height=0
     )
     
-    # 3. Short delay to let the browser receive the message before the server dies
+    # 2. Brief pause to ensure the browser receives the HTML above
     import time
-    time.sleep(1)
+    time.sleep(0.5)
     
-    # 4. Kill the process
-    os.kill(os.getpid(), signal.SIGINT)
+    # 3. KILL THE ENTIRE PROCESS GROUP
+    # This targets the Python script AND the shell script that started it.
+    import os
+    import signal
+    
+    # os.getpgrp() gets the Process Group ID. 
+    # Killing the group ensures the Automator 'robot' stops immediately.
+    os.killpg(os.getpgrp(), signal.SIGTERM)
 
 st.sidebar.markdown("---")
 angle_step_deg = st.sidebar.selectbox("CSV Angle Resolution", [1.0, 0.5, 0.1, 0.05], index=2)
