@@ -197,7 +197,8 @@ def solve_kinematics(m_p, m_t, m_out, m_other, Ep, Q, angles_deg):
 # 2. UI LAYOUT & SIDEBAR INPUTS
 # =============================================================================
 st.set_page_config(page_title="Kinematics Calculator", layout="wide")
-st.title("☢️ Nuclear Kinematics Calculator")
+st.image("/Users/rhys/Documents/Kinematic Calculator/nuclear-logo-copia-2.png.webp", width = 700)
+st.title("Nuclear Reaction Kinematics Calculator")
 
 st.sidebar.header("Reaction Parameters")
 col1, col2 = st.sidebar.columns(2)
@@ -361,6 +362,15 @@ ax.legend()
 
 st.pyplot(fig)
 
+st.markdown("---")
+
+st.write(
+    "<div style='text-align: center; color: gray; font-size: 0.8em;'>"
+    "Developed by Rhys Bonnell • 2026"
+    "</div>", 
+    unsafe_allow_html=True
+)
+st.markdown("---")
 # =============================================================================
 # 5. CSV EXPORT BUTTON
 # =============================================================================
